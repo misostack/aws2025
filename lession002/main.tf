@@ -112,23 +112,32 @@ resource "aws_vpc_security_group_ingress_rule" "jsbase_main_sg_ingress_icmp_rule
   to_port     = -1 # Allows all ICMP codes
 }
 
+resource "aws_key_pair" "jsbase_main_key" {
+  key_name   = "jsbase_main_key"
+  public_key = file("~/.ssh/id_ed25519.pub")
+}
+
+
 resource "aws_instance" "jsbase_main_ec2" {
-  ami             = "ami-04b4f1a9cf54c11d0"
-  instance_type   = "t2.micro"
-  subnet_id       = aws_subnet.jsbase_main_subnet.id
-  private_ip      = "10.0.1.4"
+  count         = 3 # This will create 3 instances
+  ami           = "ami-04b4f1a9cf54c11d0"
+  instance_type = "t2.micro"
+  subnet_id     = aws_subnet.jsbase_main_subnet.id
+  // IP from 10.0.1.4 to 10.0.1.6
+  private_ip      = "10.0.1.${count.index + 4}"
   security_groups = [aws_security_group.jsbase_main_sg.id]
+  key_name        = aws_key_pair.jsbase_main_key.key_name
 
   tags = {
-    Name = "jsbase_main"
+    Name = "jsbase_main EC2 Instance[${count.index}]"
   }
 }
 
 resource "aws_eip" "jsbase_main_eip" {
   domain = "vpc"
 
-  instance                  = aws_instance.jsbase_main_ec2.id
-  associate_with_private_ip = "10.0.1.4"
-  depends_on                = [aws_internet_gateway.jsbase_main_igw]
+  instance = aws_instance.jsbase_main_ec2[0].id
+  #associate_with_private_ip = "10.0.1.4"
+  depends_on = [aws_internet_gateway.jsbase_main_igw]
 }
 

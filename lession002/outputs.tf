@@ -24,12 +24,12 @@ output "main_route_table_association_id" {
 }
 
 output "main_ec2_id" {
-  value       = aws_instance.jsbase_main_ec2.id
+  value       = aws_instance.jsbase_main_ec2[0].id
   description = "value of the main ec2 instance id"
 }
 
 output "main_ec2_arn" {
-  value       = aws_instance.jsbase_main_ec2.arn
+  value       = aws_instance.jsbase_main_ec2[0].arn
   description = "value of the main ec2 instance arn"
 }
 
