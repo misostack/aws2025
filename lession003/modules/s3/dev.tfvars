@@ -1,0 +1,5 @@
+region      = "us-east-1"
+profile     = "jsbase"
+environment = "dev"
+bucket_name = "jsbase-terraform-lession003-s3-bucket"
+user_name   = "jsbase"
