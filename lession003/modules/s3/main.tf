@@ -46,8 +46,8 @@ data "aws_iam_policy_document" "main_user_policy" {
 }
 
 resource "aws_iam_policy" "policy" {
-  name        = "test-policy"
-  description = "A test policy"
+  name        = "main_user_policy"
+  description = "A main_user_policy"
   policy      = data.aws_iam_policy_document.main_user_policy.json
 }
 
